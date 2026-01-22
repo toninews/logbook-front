@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   css: ["~/assets/main.css", "~/assets/flexboxgrid.css", "~/assets/spinner.css"],
   runtimeConfig: {
     public: {
-      apiBase: process.env.baseUrl ?? "http://localhost:4010",
+      apiBase: process.env.baseUrl ?? "http://localhost:8080",
     },
   },
    app: {

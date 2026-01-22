@@ -145,6 +145,10 @@ const translations = {
     delete: "Excluir",
     showAll: "Mostrar todos",
     noRecords: "Nenhum registro encontrado",
+    cancel: "Cancelar",
+    swalDeleteTitle: "Tem certeza?",
+    swalDeleteText: "Você não poderá reverter isso!",
+    swalDeleteSuccessText: "O registro foi deletado com sucesso!",
     swalWarningTitle: "Ops...",
     swalWarningText: "Você precisa preencher título e conteúdo!",
     swalSuccessTitle: "Sucesso!",
@@ -167,9 +171,13 @@ const translations = {
     searchPlaceholder: "Search by title, content or tag...",
     search: "Search",
     myLogs: "My Logs",
-    delete: "Delete",
     showAll: "Show all",
     noRecords: "No records found",
+    delete: "Delete",
+    cancel: "Cancel",
+    swalDeleteTitle: "Are you sure?",
+    swalDeleteText: "You won't be able to revert this!",
+    swalDeleteSuccessText: "The entry has been deleted successfully!",
     swalWarningTitle: "Oops...",
     swalWarningText: "You need to fill in title and content!",
     swalSuccessTitle: "Success!",
@@ -357,6 +365,22 @@ export default {
     async handleDelete(id) {
       console.log("id sent:", id);
 
+      const result = await Swal.fire({
+        title: this.t("swalDeleteTitle"),
+        text: this.t("swalDeleteText"),
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: this.t("delete"),
+        cancelButtonText: this.t("cancel"),
+      });
+
+      if (!result.isConfirmed) {
+        console.log("Delete cancelled");
+        return;
+      }
+
       const config = {
         method: "DELETE",
       };
@@ -366,7 +390,16 @@ export default {
         console.log("status delete:", response.status);
         console.log("response ok?", response.ok);
 
-        this.loadLogs();
+        if (response.ok) {
+          Swal.fire(
+            this.t("swalSuccessTitle"),
+            this.t("swalDeleteSuccessText"),
+            "success",
+          );
+          this.loadLogs();
+        } else {
+          Swal.fire(this.t("swalErrorTitle"), this.t("swalErrorText"), "error");
+        }
       } catch (error) {
         console.error("unexpected error:", error);
         alert("error deleting record");

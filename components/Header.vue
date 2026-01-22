@@ -215,7 +215,7 @@ export default {
 }
 
 .header-date {
-  font-size: 14px;
+  font-size: 16px;
   color: #64748b;
 }
 
