@@ -11,7 +11,7 @@ export default defineNuxtConfig({
   },
    app: {
     head: {
-      title: 'Meu Diário de Bordo / LogBook',
+      title: 'Diário de Bordo / LogBook',
       link: [
         {
           rel: 'stylesheet',
