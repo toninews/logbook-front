@@ -6,11 +6,12 @@ export default defineNuxtConfig({
   css: ["~/assets/main.css", "~/assets/flexboxgrid.css", "~/assets/spinner.css"],
   runtimeConfig: {
     public: {
-      apiBase: process.env.baseUrl ?? "http://localhost:8080",
+      apiBase: process.env.baseUrl ?? "http://localhost:4010",
     },
   },
    app: {
     head: {
+      title: 'Meu Diário de Bordo / LogBook',
       link: [
         {
           rel: 'stylesheet',

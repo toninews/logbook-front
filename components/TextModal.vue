@@ -34,7 +34,8 @@ export default {
 .modal-box {
   background: #fff;
   max-width: 800px;
-  height: 60vh;
+  width: 90%;
+  max-height: 80vh;
   border-radius: 12px;
   overflow: hidden;
   display: flex;
@@ -54,6 +55,13 @@ export default {
   overflow-y: auto;
   flex: 1;
   line-height: 1.6;
+}
+
+.modal-content p {
+  max-width: 100%;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
 .close-btn {
@@ -79,5 +87,17 @@ export default {
 
 .dark .modal-overlay {
   background: rgba(0, 0, 0, 0.8);
+}
+
+@media (max-width: 600px) {
+  .modal-overlay {
+    padding: 15px;
+  }
+
+  .modal-box {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+  }
 }
 </style>

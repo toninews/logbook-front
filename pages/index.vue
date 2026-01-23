@@ -246,6 +246,8 @@ export default {
           `${this.apiBase}/getList?page=${page}&search=${this.search}`,
         );
 
+        console.log("API Base:", this.apiBase);
+
         console.log("response.ok:", response.ok);
         console.log("status:", response.status);
 

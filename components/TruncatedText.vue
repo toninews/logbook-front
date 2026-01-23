@@ -70,4 +70,22 @@ export default {
 .btn-see-more:hover {
   background: #d1fae5;
 }
+
+.content-list {
+  max-width: 100%;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+}
+
+@media (max-width: 600px) {
+  .content-list {
+    -webkit-line-clamp: 2;
+  }
+}
 </style>
