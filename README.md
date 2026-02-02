@@ -99,10 +99,6 @@ This project was built with Nuxt to leverage:
 
 This project uses environment variables to configure the API connection.
 
-Create a .env file based on .env.example:
-
-cp .env.example .env
-
 Environment Variables
 Variable Description Example
 API_BASE_URL Backend API base URL http://168.138.135.249:4010
@@ -112,18 +108,30 @@ In production, this value should match the backend API address, Docker network, 
 
 🚀 Running the Project Locally
 Install dependencies
+
+```
 npm install
 
+```
+
 Start development server
+
+```
 npm run dev
+```
 
 The application will be available at:
 
+```
 http://localhost:3000
+```
 
 🧪 Production Build
+
+```
 npm run build
 npm run start
+```
 
 Or via Docker (recommended for production environments).
 
