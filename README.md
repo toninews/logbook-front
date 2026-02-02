@@ -77,7 +77,6 @@ This project was built with Nuxt to leverage:
 ### 🔌 API Integration
 
 - Fully integrated with the Logbook REST API
-- Axios-based HTTP communication
 - Centralized API configuration
 - Error handling aligned with backend responses
 
@@ -87,11 +86,10 @@ This project was built with Nuxt to leverage:
 
 - Nuxt.js
 - Vue.js
-- Axios
 - SweetAlert2 (Swal) for alerts and confirmations
 - REST API integration
 - Docker-ready configuration
-- Deployed on a Linux VPS
+- Deployed on an Ubuntu VPS hosted on Oracle Cloud Infrastructure (OCI)
 
 ---
 
@@ -111,7 +109,6 @@ Install dependencies
 
 ```
 npm install
-
 ```
 
 Start development server

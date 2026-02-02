@@ -113,7 +113,6 @@ export default {
         dateStr = dateStr.replace(/,?\s?De\s/, " de ");
       }
 
-      console.log("dateStr", dateStr);
       return dateStr;
     },
 
