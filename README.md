@@ -99,17 +99,15 @@ This project was built with Nuxt to leverage:
 
 This project uses environment variables to configure the API connection.
 
-Create a `.env` file based on `.env.example`:
+Create a .env file based on .env.example:
 
-```bash
 cp .env.example .env
 
-
 Environment Variables
-Variable	Description	Example
-API_BASE_URL	Backend API base URL	http://168.138.135.249:4010
+Variable Description Example
+API_BASE_URL Backend API base URL http://168.138.135.249:4010
 
-Note:
+⚠️ Note:
 In production, this value should match the backend API address, Docker network, or reverse proxy configuration.
 
 🚀 Running the Project Locally
@@ -119,7 +117,6 @@ npm install
 Start development server
 npm run dev
 
-
 The application will be available at:
 
 http://localhost:3000
@@ -128,24 +125,16 @@ http://localhost:3000
 npm run build
 npm run start
 
-
 Or via Docker (recommended for production environments).
 
 ## 🧠 Architectural Notes
 
-This frontend was designed with production awareness in mind:
-
+- This frontend was designed with production awareness in mind:
 - Clear separation between UI and API layers
 - Centralized configuration for API endpoints
 - No hardcoded environment-specific values
 - Ready for containerized deployment
-- User interaction feedback handled via SweetAlert2 for consistent alerts
 - Easily extendable for authentication, roles, or dashboards
-
-## 🔗 Related Projects
-
-- Backend API: Logbook API (Node.js + MongoDB)
-- Live Frontend: http://168.138.135.249:3000/
 
 ## 🚀 Conclusion
 
@@ -160,4 +149,3 @@ Together with the backend API, this project demonstrates:
 - Clean architecture and maintainable codebase
 
 This project was built as a portfolio piece, aiming to reflect how modern frontend applications are structured, deployed, and maintained in real production environments.
-```
