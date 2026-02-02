@@ -851,11 +851,6 @@ export default {
 }
 
 @media (max-width: 768px) {
-  .new-register-wrapper {
-    justify-content: start;
-    margin-left: 15px;
-  }
-
   .search-box {
     display: flex;
     flex-direction: column;
