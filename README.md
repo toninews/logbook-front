@@ -46,6 +46,16 @@ This project was built with Nuxt to leverage:
 
 ---
 
+## 🛠️ Code Quality & Practices
+
+- Centralized API routes (`utils/apiRoutes.js`) to avoid duplication and typos
+- Internationalization support with `utils/translations.js`
+- Utility functions for alerts (`utils/alerts.js`) to reduce repetition
+- Extracted `elapsedTime` logic into `utils/elapsedTime.js` for reusability and testability
+- Basic unit tests with Node.js to validate core logic without external libraries
+
+---
+
 ## ✨ Features
 
 ### 🧩 Core Features
