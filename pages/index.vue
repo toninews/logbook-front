@@ -128,91 +128,31 @@
 
 <script>
 import Swal from "sweetalert2";
-
-const translations = {
-  pt: {
-    newRegister: "Novo Registro",
-    title: "Título",
-    titlePlaceholder: "Título do registro",
-    content: "Conteúdo",
-    contentPlaceholder: "O que aconteceu hoje?",
-    tags: "Tags",
-    tagsPlaceholder: "Ex: estudo, trabalho, backend",
-    save: "Salvar",
-    searchPlaceholder: "Buscar por título, conteúdo ou tag...",
-    search: "Buscar",
-    myLogs: "Meus Registros",
-    delete: "Excluir",
-    showAll: "Mostrar todos",
-    noRecords: "Nenhum registro encontrado",
-    cancel: "Cancelar",
-    swalDeleteTitle: "Tem certeza?",
-    swalDeleteText: "Você não poderá reverter isso!",
-    swalDeleteSuccessText: "O registro foi deletado com sucesso!",
-    swalWarningTitle: "Ops...",
-    swalWarningText: "Você precisa preencher título e conteúdo!",
-    swalSuccessTitle: "Sucesso!",
-    swalSuccessText: "Novo registro inserido com sucesso!",
-    swalErrorTitle: "Erro",
-    swalErrorText: "Algo deu errado!",
-    swalRateLimitTitle: "Muitas requisições",
-    swalRateLimitText:
-      "Você fez muitas requisições em pouco tempo. Tente novamente em alguns segundos.",
-  },
-  en: {
-    newRegister: "New Entry",
-    title: "Title",
-    titlePlaceholder: "Entry title",
-    content: "Content",
-    contentPlaceholder: "What happened today?",
-    tags: "Tags",
-    tagsPlaceholder: "Ex: study, work, backend",
-    save: "Save",
-    searchPlaceholder: "Search by title, content or tag...",
-    search: "Search",
-    myLogs: "My Logs",
-    showAll: "Show all",
-    noRecords: "No records found",
-    delete: "Delete",
-    cancel: "Cancel",
-    swalDeleteTitle: "Are you sure?",
-    swalDeleteText: "You won't be able to revert this!",
-    swalDeleteSuccessText: "The entry has been deleted successfully!",
-    swalWarningTitle: "Oops...",
-    swalWarningText: "You need to fill in title and content!",
-    swalSuccessTitle: "Success!",
-    swalSuccessText: "New entry added successfully!",
-    swalErrorTitle: "Error",
-    swalErrorText: "Something went wrong!",
-    swalRateLimitTitle: "Too many requests",
-    swalRateLimitText:
-      "You have made too many requests in a short period. Please try again in a few seconds.",
-  },
-};
+import { translations } from "~/utils/translations";
+import { API_ROUTES } from "~/utils/apiRoutes";
+import { alertError, alertWarning, alertSuccess } from "~/utils/alerts";
+import { elapsedTime } from "~/utils/elapsedTime";
 
 export default {
   props: ["language"],
   data() {
+    const config = useRuntimeConfig();
     return {
       registros: [],
       titulo: "",
       conteudo: "",
       tagsInput: "",
       search: "",
-      apiBase: "",
       selectedRegistro: null,
       currentPage: 1,
       totalPages: 1,
       isDark: false,
-      translations,
       loading: false,
+      apiBase: config.public.apiBase,
     };
   },
 
   mounted() {
-    const { apiBase } = useApiBase();
-    this.apiBase = apiBase;
-
     const savedDark = localStorage.getItem("darkMode");
     if (savedDark !== null) {
       this.isDark = savedDark === "true";
@@ -228,7 +168,7 @@ export default {
     },
 
     t(key) {
-      return this.translations[this.language][key] || key;
+      return translations[this.language][key] || key;
     },
 
     openRegistro(registro) {
@@ -243,25 +183,23 @@ export default {
       try {
         this.loading = true;
         const response = await fetch(
-          `${this.apiBase}/getList?page=${page}&search=${this.search}`,
+          `${this.apiBase}${API_ROUTES.GET_LIST}?page=${page}&search=${this.search}`,
         );
-
-        console.log("API Base:", this.apiBase);
 
         console.log("response.ok:", response.ok);
         console.log("status:", response.status);
 
         if (response.status === 429) {
-          Swal.fire({
-            icon: "warning",
-            title: this.t("swalRateLimitTitle"),
-            text: this.t("swalRateLimitText"),
-          });
+          alertWarning(
+            this.t("swalRateLimitTitle"),
+            this.t("swalRateLimitText"),
+          );
           return;
         }
 
         if (!response.ok) {
           const text = await response.text();
+          alertError(this.t("swalErrorTitle"), this.t("swalErrorText"));
           throw new Error(text);
         }
 
@@ -274,22 +212,13 @@ export default {
         this.loading = false;
       } catch (err) {
         console.error("error loading logs:", err);
-
-        Swal.fire({
-          icon: "error",
-          title: this.t("swalErrorTitle"),
-          text: this.t("swalErrorText"),
-        });
+        alertError(this.t("swalErrorTitle"), this.t("swalErrorText"));
       }
     },
 
     async handleSubmit() {
       if (!this.titulo || !this.conteudo) {
-        Swal.fire({
-          icon: "warning",
-          title: this.t("swalWarningTitle"),
-          text: this.t("swalWarningText"),
-        });
+        alertWarning(this.t("swalRateLimitTitle"), this.t("swalRateLimitText"));
         return;
       }
 
@@ -319,27 +248,23 @@ export default {
       console.log("config", config);
 
       try {
-        const response = await fetch(`${this.apiBase}/insertTask`, config);
+        const response = await fetch(
+          `${this.apiBase}${API_ROUTES.INSERT_TASK}`,
+          config,
+        );
         console.log("http status:", response.status);
 
         if (response.status === 429) {
-          Swal.fire({
-            icon: "warning",
-            title: this.t("swalRateLimitTitle"),
-            text: this.t("swalRateLimitText"),
-          });
+          alertWarning(
+            this.t("swalRateLimitTitle"),
+            this.t("swalRateLimitText"),
+          );
           return;
         }
 
         if (!response.ok) {
           const text = await response.text();
-
-          Swal.fire({
-            icon: "error",
-            title: this.t("swalErrorTitle"),
-            text: this.t("swalErrorText"),
-          });
-
+          alertError(this.t("swalErrorTitle"), this.t("swalErrorText"));
           throw new Error(text);
         }
 
@@ -352,11 +277,7 @@ export default {
 
         this.loadLogs();
 
-        Swal.fire({
-          icon: "success",
-          title: this.t("swalSuccessTitle"),
-          text: this.t("swalSuccessText"),
-        });
+        alertSuccess(this.t("swalSuccessTitle"), this.t("swalSuccessText"));
 
         console.log("success!");
       } catch (error) {
@@ -388,19 +309,21 @@ export default {
       };
 
       try {
-        const response = await fetch(`${this.apiBase}/${id}`, config);
+        const response = await fetch(
+          `${this.apiBase}${API_ROUTES.DELETE_TASK(id)}`,
+          config,
+        );
         console.log("status delete:", response.status);
         console.log("response ok?", response.ok);
 
         if (response.ok) {
-          Swal.fire(
+          alertSuccess(
             this.t("swalSuccessTitle"),
             this.t("swalDeleteSuccessText"),
-            "success",
           );
           this.loadLogs();
         } else {
-          Swal.fire(this.t("swalErrorTitle"), this.t("swalErrorText"), "error");
+          alertError(this.t("swalErrorTitle"), this.t("swalErrorText"));
         }
       } catch (error) {
         console.error("unexpected error:", error);
@@ -409,54 +332,7 @@ export default {
     },
 
     elapsedTime(createdAt) {
-      const agora = new Date();
-      const dataRegistro = new Date(createdAt);
-
-      const diffMs = agora - dataRegistro;
-      const diffSeg = Math.floor(diffMs / 1000);
-      const diffMin = Math.floor(diffSeg / 60);
-      const diffHora = Math.floor(diffMin / 60);
-      const diffDia = Math.floor(diffHora / 24);
-      const diffMes = Math.floor(diffDia / 30);
-      const diffAno = Math.floor(diffDia / 365);
-
-      const lang = this.language || "pt";
-
-      const texts = {
-        pt: {
-          now: "agora mesmo",
-          minute: "minuto",
-          hour: "hora",
-          day: "dia",
-          month: "mês",
-          year: "ano",
-          plural: (count) => (count > 1 ? "s" : ""),
-          format: (value, unit) => `há ${value} ${unit}`,
-        },
-        en: {
-          now: "just now",
-          minute: "minute",
-          hour: "hour",
-          day: "day",
-          month: "month",
-          year: "year",
-          plural: (count) => (count > 1 ? "s" : ""),
-          format: (value, unit) => `${value} ${unit} ago`,
-        },
-      };
-
-      const t = texts[lang];
-
-      if (diffSeg < 60) return t.now;
-      if (diffMin < 60)
-        return t.format(diffMin, `${t.minute}${t.plural(diffMin)}`);
-      if (diffHora < 24)
-        return t.format(diffHora, `${t.hour}${t.plural(diffHora)}`);
-      if (diffDia < 30)
-        return t.format(diffDia, `${t.day}${t.plural(diffDia)}`);
-      if (diffMes < 12)
-        return t.format(diffMes, `${t.month}${t.plural(diffMes)}`);
-      return t.format(diffAno, `${t.year}${t.plural(diffAno)}`);
+      return elapsedTime(createdAt, this.language);
     },
   },
 };
