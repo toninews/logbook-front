@@ -109,7 +109,7 @@ This project uses environment variables to configure the API connection.
 
 Environment Variables
 Variable Description Example
-API_BASE_URL Backend API base URL http://168.138.135.249:4010
+API_BASE_URL Backend API base URL http://163.176.158.136:4010
 
 ⚠️ Note:
 In production, this value should match the backend API address, Docker network, or reverse proxy configuration.
