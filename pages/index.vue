@@ -218,7 +218,7 @@ export default {
 
     async handleSubmit() {
       if (!this.titulo || !this.conteudo) {
-        alertWarning(this.t("swalRateLimitTitle"), this.t("swalRateLimitText"));
+        alertWarning(this.t("swalWarningTitle"), this.t("swalWarningText"));
         return;
       }
 
