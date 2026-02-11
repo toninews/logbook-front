@@ -171,7 +171,9 @@ export default {
     },
 
     t(key) {
-      return translations[this.language][key] || key;
+      const languageTranslations =
+        translations[this.language] || translations.pt || {};
+      return languageTranslations[key] || key;
     },
 
     openRegistro(registro) {
