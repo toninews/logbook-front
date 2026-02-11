@@ -165,6 +165,12 @@ export default {
   },
 
   methods: {
+    debugLog(...args) {
+      if (import.meta.dev) {
+        console.log(...args);
+      }
+    },
+
     clearSearch() {
       this.search = "";
       this.loadLogs(1);
@@ -195,8 +201,8 @@ export default {
           `${this.apiBase}${API_ROUTES.GET_LIST}?${queryParams.toString()}`,
         );
 
-        console.log("response.ok:", response.ok);
-        console.log("status:", response.status);
+        this.debugLog("response.ok:", response.ok);
+        this.debugLog("status:", response.status);
 
         if (response.status === 429) {
           alertWarning(
@@ -254,14 +260,14 @@ export default {
         },
         body: JSON.stringify(registrationData),
       };
-      console.log("config", config);
+      this.debugLog("config", config);
 
       try {
         const response = await fetch(
           `${this.apiBase}${API_ROUTES.INSERT_TASK}`,
           config,
         );
-        console.log("http status:", response.status);
+        this.debugLog("http status:", response.status);
 
         if (response.status === 429) {
           alertWarning(
@@ -278,7 +284,7 @@ export default {
         }
 
         const data = await response.json();
-        console.log("response from backend", data);
+        this.debugLog("response from backend", data);
 
         this.titulo = "";
         this.conteudo = "";
@@ -288,14 +294,14 @@ export default {
 
         alertSuccess(this.t("swalSuccessTitle"), this.t("swalSuccessText"));
 
-        console.log("success!");
+        this.debugLog("success!");
       } catch (error) {
         console.error("unexpected error:", error);
       }
     },
 
     async handleDelete(id) {
-      console.log("id sent:", id);
+      this.debugLog("id sent:", id);
 
       const result = await Swal.fire({
         title: this.t("swalDeleteTitle"),
@@ -309,7 +315,7 @@ export default {
       });
 
       if (!result.isConfirmed) {
-        console.log("Delete cancelled");
+        this.debugLog("Delete cancelled");
         return;
       }
 
@@ -322,8 +328,8 @@ export default {
           `${this.apiBase}${API_ROUTES.DELETE_TASK(id)}`,
           config,
         );
-        console.log("status delete:", response.status);
-        console.log("response ok?", response.ok);
+        this.debugLog("status delete:", response.status);
+        this.debugLog("response ok?", response.ok);
 
         if (response.ok) {
           alertSuccess(
@@ -336,7 +342,7 @@ export default {
         }
       } catch (error) {
         console.error("unexpected error:", error);
-        alert("error deleting record");
+        alertError(this.t("swalErrorTitle"), this.t("swalErrorText"));
       }
     },
 
