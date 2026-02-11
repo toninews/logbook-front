@@ -1,9 +1,23 @@
 <template>
-  <div class="modal-overlay" @click.self="$emit('close')">
-    <div class="modal-box">
+  <div class="modal-overlay" @click.self="closeModal">
+    <div
+      ref="modalBox"
+      class="modal-box"
+      role="dialog"
+      aria-modal="true"
+      :aria-labelledby="titleId"
+      tabindex="-1"
+    >
       <div class="modal-header">
-        <h2>{{ title }}</h2>
-        <button class="close-btn" @click="$emit('close')">✕</button>
+        <h2 :id="titleId">{{ title }}</h2>
+        <button
+          class="close-btn"
+          type="button"
+          aria-label="Fechar modal"
+          @click="closeModal"
+        >
+          ✕
+        </button>
       </div>
 
       <div class="modal-content">
@@ -15,7 +29,49 @@
 
 <script>
 export default {
-  props: ["title", "content"],
+  props: {
+    title: {
+      type: String,
+      default: "",
+    },
+    content: {
+      type: String,
+      default: "",
+    },
+  },
+  emits: ["close"],
+  data() {
+    return {
+      titleId: `text-modal-title-${Math.random().toString(36).slice(2, 11)}`,
+      previousFocusedElement: null,
+    };
+  },
+  mounted() {
+    this.previousFocusedElement = document.activeElement;
+    document.addEventListener("keydown", this.handleKeydown);
+
+    this.$nextTick(() => {
+      if (this.$refs.modalBox?.focus) {
+        this.$refs.modalBox.focus();
+      }
+    });
+  },
+  beforeUnmount() {
+    document.removeEventListener("keydown", this.handleKeydown);
+    if (this.previousFocusedElement?.focus) {
+      this.previousFocusedElement.focus();
+    }
+  },
+  methods: {
+    closeModal() {
+      this.$emit("close");
+    },
+    handleKeydown(event) {
+      if (event.key === "Escape") {
+        this.closeModal();
+      }
+    },
+  },
 };
 </script>
 
