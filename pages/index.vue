@@ -48,7 +48,11 @@
       <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6 search-box">
         <i class="fa-solid fa-magnifying-glass search-icon"></i>
 
+        <label for="searchInput" class="sr-only">
+          {{ t("search") }}
+        </label>
         <input
+          id="searchInput"
           v-model="search"
           :placeholder="t('searchPlaceholder')"
           @keyup.enter="loadLogs(1)"
@@ -545,6 +549,18 @@ export default {
   font-size: 14px;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .search-icon {
   position: absolute;
   left: 12px;
@@ -669,38 +685,6 @@ export default {
   resize: vertical;
   outline: none;
   color: #e5e7eb;
-}
-
-.debug {
-  border: #991b1b;
-  border: solid;
-}
-
-.theme-toggle {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: #ffffff;
-  color: #0f172a;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-  transition: all 0.25s ease;
-  z-index: 999;
-}
-
-.theme-toggle:hover {
-  transform: scale(1.08);
-}
-
-.dark .theme-toggle {
-  background: #1e293b;
-  color: #facc15;
 }
 
 .btn-clear {
