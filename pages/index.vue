@@ -301,6 +301,7 @@ export default {
         this.debugLog("success!");
       } catch (error) {
         console.error("unexpected error:", error);
+        alertError(this.t("swalErrorTitle"), this.t("swalErrorText"));
       }
     },
 
