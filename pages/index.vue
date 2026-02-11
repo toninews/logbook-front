@@ -7,13 +7,18 @@
         <form @submit.prevent="handleSubmit" class="col-xs-12 diario-form">
           <div class="row">
             <div class="col-xs-12 form-group">
-              <span>{{ t("title") }}</span>
-              <input v-model="titulo" :placeholder="t('titlePlaceholder')" />
+              <label for="titulo">{{ t("title") }}</label>
+              <input
+                id="titulo"
+                v-model="titulo"
+                :placeholder="t('titlePlaceholder')"
+              />
             </div>
 
             <div class="col-xs-12 form-group">
-              <span>{{ t("content") }}</span>
+              <label for="conteudo">{{ t("content") }}</label>
               <textarea
+                id="conteudo"
                 v-model="conteudo"
                 :placeholder="t('contentPlaceholder')"
                 class="content-textarea"
@@ -21,8 +26,12 @@
             </div>
 
             <div class="col-xs-12 form-group">
-              <span>{{ t("tags") }}</span>
-              <input v-model="tagsInput" :placeholder="t('tagsPlaceholder')" />
+              <label for="tagsInput">{{ t("tags") }}</label>
+              <input
+                id="tagsInput"
+                v-model="tagsInput"
+                :placeholder="t('tagsPlaceholder')"
+              />
             </div>
 
             <div class="col-xs-12 end-xs">
