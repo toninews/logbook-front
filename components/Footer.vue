@@ -1,7 +1,7 @@
 <template>
   <footer class="app-footer">
     <div class="footer-content">
-      <i class="fa-solid fa-anchor footer-icon"></i>
+      <i class="fa-solid fa-anchor footer-icon" aria-hidden="true"></i>
       <span class="footer-text">
         {{ getFooterText(language) }} • {{ year }}
       </span>
@@ -11,15 +11,35 @@
 
 <script>
 export default {
-  props: ["language"],
+  props: {
+    language: {
+      type: String,
+      default: "pt",
+      validator: (value) => ["pt", "en"].includes(value),
+    },
+  },
   data() {
     return {
       year: new Date().getFullYear(),
+      clockTimerId: null,
       translations: {
         pt: "Diário de Bordo • Desenvolvido por toninews",
         en: "Logbook • Developed by toninews",
       },
     };
+  },
+
+  mounted() {
+    this.clockTimerId = setInterval(() => {
+      this.year = new Date().getFullYear();
+    }, 60000);
+  },
+
+  beforeUnmount() {
+    if (this.clockTimerId) {
+      clearInterval(this.clockTimerId);
+      this.clockTimerId = null;
+    }
   },
 
   methods: {
