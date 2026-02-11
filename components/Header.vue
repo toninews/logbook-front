@@ -2,7 +2,7 @@
   <header class="app-header">
     <div class="header-content">
       <div class="header-left">
-        <i class="fa-solid fa-anchor header-icon anchor"></i>
+        <i class="fa-solid fa-anchor header-icon anchor" aria-hidden="true"></i>
         <span class="header-title">{{ getTitle(language) }}</span>
       </div>
 
@@ -10,37 +10,61 @@
         <span class="header-date">
           {{ getToday(language) }}
         </span>
-        <button class="menu-btn" @click="toggleMenu">
-          <i v-if="!menuOpen" class="fa-solid fa-bars"></i>
-          <i v-else class="fa-solid fa-xmark"></i>
+        <button
+          class="menu-btn"
+          type="button"
+          :aria-label="getMenuButtonLabel(language, menuOpen)"
+          :aria-expanded="menuOpen"
+          aria-controls="header-menu-dropdown"
+          @click="toggleMenu"
+        >
+          <i v-if="!menuOpen" class="fa-solid fa-bars" aria-hidden="true"></i>
+          <i v-else class="fa-solid fa-xmark" aria-hidden="true"></i>
         </button>
         <transition name="dropdown">
-          <div v-if="menuOpen" class="menu-dropdown">
-            <div
+          <div v-if="menuOpen" id="header-menu-dropdown" class="menu-dropdown">
+            <button
               class="theme-toggle"
               :title="getThemeText(isDark, language)"
+              type="button"
               @click="toggleDark"
             >
-              <i class="fa-solid" :class="isDark ? 'fa-sun' : 'fa-moon'"></i>
+              <i
+                class="fa-solid"
+                :class="isDark ? 'fa-sun' : 'fa-moon'"
+                aria-hidden="true"
+              ></i>
               <span>{{ getThemeText(isDark, language) }}</span>
-            </div>
+            </button>
 
-            <div class="menu-item language-item" @click="toggleLanguage">
-              <i class="fa-solid fa-globe"></i>
+            <button
+              class="menu-item language-item"
+              type="button"
+              @click="toggleLanguage"
+            >
+              <i class="fa-solid fa-globe" aria-hidden="true"></i>
               <span class="menu-text">{{ getLanguageLabel(language) }}</span>
-            </div>
+            </button>
 
             <transition name="dropdown">
               <div v-if="languageOpen" class="language-dropdown">
-                <div class="language-option" @click="selectLanguage('pt')">
+                <button
+                  class="language-option"
+                  type="button"
+                  @click="selectLanguage('pt')"
+                >
                   <span class="flag">🇧🇷</span>
                   {{ language === "pt" ? "Português" : "Portuguese" }}
-                </div>
+                </button>
 
-                <div class="language-option" @click="selectLanguage('en')">
+                <button
+                  class="language-option"
+                  type="button"
+                  @click="selectLanguage('en')"
+                >
                   <span class="flag">🇺🇸</span>
                   {{ language === "pt" ? "Inglês" : "English" }}
-                </div>
+                </button>
               </div>
             </transition>
           </div>
@@ -52,22 +76,33 @@
 
 <script>
 export default {
-  props: ["isDark", "language"],
+  props: {
+    isDark: {
+      type: Boolean,
+      default: false,
+    },
+    language: {
+      type: String,
+      default: "pt",
+      validator: (value) => ["pt", "en"].includes(value),
+    },
+  },
   data() {
     return {
-      today: "",
       menuOpen: false,
       languageOpen: false,
       translations: {
         pt: {
           title: "Diário de Bordo",
           locale: "pt-BR",
+          menu: { open: "Abrir menu", close: "Fechar menu" },
           languageLabel: "Idioma",
           theme: { dark: "Modo escuro", light: "Modo claro" },
         },
         en: {
           title: "Logbook",
           locale: "en-US",
+          menu: { open: "Open menu", close: "Close menu" },
           languageLabel: "Language",
           theme: { dark: "Dark mode", light: "Light mode" },
         },
@@ -118,6 +153,12 @@ export default {
 
     getLanguageLabel(lang) {
       return this.translations[lang]?.languageLabel || "Idioma";
+    },
+
+    getMenuButtonLabel(lang, isOpen) {
+      const menuTranslations =
+        this.translations[lang]?.menu || this.translations.pt.menu;
+      return isOpen ? menuTranslations.close : menuTranslations.open;
     },
 
     getThemeText(isDark, lang) {
@@ -277,6 +318,9 @@ export default {
   padding: 10px 12px;
   border-radius: 6px;
   cursor: pointer;
+  border: none;
+  background: transparent;
+  width: 100%;
   font-size: 16px !important;
   text-align: center;
 }
@@ -306,9 +350,9 @@ export default {
 
 .language-dropdown {
   position: absolute;
-  top: 60px;
-  left: 205px;
-  width: 200px;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 100%;
   background: white;
   border-radius: 10px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
@@ -336,6 +380,9 @@ export default {
   padding: 10px 12px;
   border-radius: 6px;
   cursor: pointer;
+  border: none;
+  background: transparent;
+  width: 100%;
   font-size: 16px;
   text-align: center;
 }
@@ -353,7 +400,7 @@ export default {
 
 @media (max-width: 768px) {
   .language-dropdown {
-    top: 100px;
+    top: calc(100% + 8px);
     left: 0;
   }
 
