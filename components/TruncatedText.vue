@@ -4,8 +4,9 @@
       {{ previewText() }}
     </p>
     <button
-      v-if="text.length > limit"
+      v-if="shouldShowSeeMore()"
       class="btn-see-more"
+      type="button"
       @click="$emit('open')"
     >
       {{ t("seeMore") }}
@@ -15,7 +16,18 @@
 
 <script>
 export default {
-  props: ["text", "language"],
+  props: {
+    text: {
+      type: String,
+      default: "",
+    },
+    language: {
+      type: String,
+      default: "pt",
+      validator: (value) => ["pt", "en"].includes(value),
+    },
+  },
+  emits: ["open"],
 
   data() {
     return {
@@ -31,20 +43,22 @@ export default {
     };
   },
 
-  mounted() {},
-
   methods: {
+    shouldShowSeeMore() {
+      return (this.text || "").length > this.limit;
+    },
+
     previewText() {
-      if (!this.text) return "";
-      return this.text.length > this.limit
-        ? this.text.slice(0, this.limit) + "..."
-        : this.text;
+      const safeText = this.text || "";
+      return safeText.length > this.limit
+        ? safeText.slice(0, this.limit) + "..."
+        : safeText;
     },
 
     t(key) {
-      return this.translations[this.language]
-        ? this.translations[this.language][key]
-        : this.translations["pt"][key];
+      const languageTranslations =
+        this.translations[this.language] || this.translations.pt || {};
+      return languageTranslations[key] || key;
     },
   },
 };
@@ -76,16 +90,5 @@ export default {
   word-break: break-word;
   overflow-wrap: break-word;
   white-space: normal;
-
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 4;
-  overflow: hidden;
-}
-
-@media (max-width: 600px) {
-  .content-list {
-    -webkit-line-clamp: 2;
-  }
 }
 </style>
