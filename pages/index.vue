@@ -146,18 +146,12 @@ export default {
       selectedRegistro: null,
       currentPage: 1,
       totalPages: 1,
-      isDark: false,
       loading: false,
       apiBase: config.public.apiBase,
     };
   },
 
   mounted() {
-    const savedDark = localStorage.getItem("darkMode");
-    if (savedDark !== null) {
-      this.isDark = savedDark === "true";
-    }
-
     this.loadLogs(1);
   },
 
