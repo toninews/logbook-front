@@ -211,11 +211,11 @@ export default {
         this.registros = data.data;
         this.totalPages = data.totalPages;
         this.currentPage = data.currentPage;
-
-        this.loading = false;
       } catch (err) {
         console.error("error loading logs:", err);
         alertError(this.t("swalErrorTitle"), this.t("swalErrorText"));
+      } finally {
+        this.loading = false;
       }
     },
 
