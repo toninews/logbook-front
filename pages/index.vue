@@ -185,8 +185,12 @@ export default {
     async loadLogs(page = 1) {
       try {
         this.loading = true;
+        const queryParams = new URLSearchParams({
+          page: String(page),
+          search: this.search,
+        });
         const response = await fetch(
-          `${this.apiBase}${API_ROUTES.GET_LIST}?page=${page}&search=${this.search}`,
+          `${this.apiBase}${API_ROUTES.GET_LIST}?${queryParams.toString()}`,
         );
 
         console.log("response.ok:", response.ok);
