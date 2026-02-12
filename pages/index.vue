@@ -161,6 +161,7 @@ export default {
       totalPages: 1,
       loading: false,
       apiBase: config.public.apiBase,
+      writeToken: config.public.writeToken,
     };
   },
 
@@ -192,6 +193,16 @@ export default {
 
     closeModal() {
       this.selectedRegistro = null;
+    },
+
+    getWriteTokenHeader() {
+      if (!this.writeToken) {
+        return {};
+      }
+
+      return {
+        "x-write-token": this.writeToken,
+      };
     },
 
     async loadLogs(page = 1) {
@@ -261,6 +272,7 @@ export default {
         method: "POST",
         headers: {
           "Content-type": "application/json",
+          ...this.getWriteTokenHeader(),
         },
         body: JSON.stringify(registrationData),
       };
@@ -326,6 +338,9 @@ export default {
 
       const config = {
         method: "DELETE",
+        headers: {
+          ...this.getWriteTokenHeader(),
+        },
       };
 
       try {
