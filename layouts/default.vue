@@ -11,54 +11,68 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      isDark: false,
-      language: "pt",
-    };
-  },
+<script setup>
+const allowedLanguages = ["pt", "en"];
 
-  beforeMount() {
+const darkCookie = useCookie("darkMode", { default: () => "false" });
+const languageCookie = useCookie("language", { default: () => "pt" });
+
+const isDark = ref(darkCookie.value === "true");
+const language = ref(
+  allowedLanguages.includes(languageCookie.value) ? languageCookie.value : "pt",
+);
+
+watch(isDark, (value) => {
+  const serialized = value ? "true" : "false";
+  darkCookie.value = serialized;
+
+  if (import.meta.client) {
     try {
-      const saved = localStorage.getItem("darkMode");
-      if (saved !== null) {
-        this.isDark = saved === "true";
-      }
-
-      const savedLang = localStorage.getItem("language");
-      if (savedLang && ["pt", "en"].includes(savedLang)) {
-        this.language = savedLang;
-      }
+      localStorage.setItem("darkMode", serialized);
     } catch (error) {
-      // Keep default values when storage is unavailable.
-      console.error("failed to read user preferences:", error);
+      console.error("failed to persist dark mode:", error);
     }
-  },
+  }
+});
 
-  methods: {
-    toggleDark() {
-      this.isDark = !this.isDark;
-      try {
-        localStorage.setItem("darkMode", this.isDark);
-      } catch (error) {
-        console.error("failed to persist dark mode:", error);
-      }
-    },
+watch(language, (value) => {
+  languageCookie.value = value;
 
-    changeLanguage(lang) {
-      if (!["pt", "en"].includes(lang)) {
-        return;
-      }
+  if (import.meta.client) {
+    try {
+      localStorage.setItem("language", value);
+    } catch (error) {
+      console.error("failed to persist language:", error);
+    }
+  }
+});
 
-      this.language = lang;
-      try {
-        localStorage.setItem("language", lang);
-      } catch (error) {
-        console.error("failed to persist language:", error);
-      }
-    },
-  },
-};
+onMounted(() => {
+  try {
+    const savedDark = localStorage.getItem("darkMode");
+    if (savedDark === "true" || savedDark === "false") {
+      isDark.value = savedDark === "true";
+    }
+
+    const savedLang = localStorage.getItem("language");
+    if (savedLang && allowedLanguages.includes(savedLang)) {
+      language.value = savedLang;
+    }
+  } catch (error) {
+    // Keep cookie/default values when storage is unavailable.
+    console.error("failed to read user preferences:", error);
+  }
+});
+
+function toggleDark() {
+  isDark.value = !isDark.value;
+}
+
+function changeLanguage(lang) {
+  if (!allowedLanguages.includes(lang)) {
+    return;
+  }
+
+  language.value = lang;
+}
 </script>
