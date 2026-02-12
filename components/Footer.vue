@@ -1,10 +1,16 @@
 <template>
   <footer class="app-footer">
     <div class="footer-content">
-      <i class="fa-solid fa-anchor footer-icon" aria-hidden="true"></i>
-      <span class="footer-text">
-        {{ getFooterText(language) }} • {{ year }}
-      </span>
+      <div class="footer-main">
+        <i class="fa-solid fa-anchor footer-icon" aria-hidden="true"></i>
+        <span class="footer-text">
+          {{ getFooterText(language) }}
+          <span class="footer-inline-meta">
+            • {{ year }}
+            <img src="/cim.png" alt="CIM" class="footer-badge" />
+          </span>
+        </span>
+      </div>
     </div>
   </footer>
 </template>
@@ -63,6 +69,11 @@ export default {
   display: inline-block;
 }
 
+.footer-main {
+  display: inline-flex;
+  align-items: center;
+}
+
 .footer-icon {
   color: #38bdf8;
   font-size: 14px;
@@ -75,5 +86,19 @@ export default {
   font-size: 14px;
   font-weight: 500;
   vertical-align: middle;
+}
+
+.footer-inline-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #cbd5e1;
+  margin-left: 4px;
+}
+
+.footer-badge {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
 }
 </style>
