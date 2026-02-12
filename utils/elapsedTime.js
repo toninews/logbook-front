@@ -33,7 +33,7 @@ export function elapsedTime(createdAt, lang = "pt") {
     },
   };
 
-  const t = texts[lang];
+  const t = texts[lang] || texts.pt;
 
   if (diffSeg < 60) return t.now;
   if (diffMin < 60) return t.format(diffMin, `${t.minute}${t.plural(diffMin)}`);
@@ -42,4 +42,3 @@ export function elapsedTime(createdAt, lang = "pt") {
   if (diffMes < 12) return t.format(diffMes, `${t.month}${t.plural(diffMes)}`);
   return t.format(diffAno, `${t.year}${t.plural(diffAno)}`);
 }
-
