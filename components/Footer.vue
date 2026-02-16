@@ -106,4 +106,10 @@ export default {
   height: 30px;
   object-fit: contain;
 }
+
+@media (max-width: 400px) {
+  .footer-text {
+    font-size: 12px;
+  }
+}
 </style>
