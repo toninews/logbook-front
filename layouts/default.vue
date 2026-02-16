@@ -12,6 +12,16 @@
 </template>
 
 <script setup>
+useHead({
+  htmlAttrs: {
+    lang: "pt",
+  },
+  title: "Diário de Bordo / LogBook",
+  meta: [
+    { name: "description", content: "Aplicativo de registro diário LogBook" },
+  ],
+});
+
 const allowedLanguages = ["pt", "en"];
 
 const darkCookie = useCookie("darkMode", { default: () => "false" });

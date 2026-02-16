@@ -66,9 +66,28 @@ export default {
     closeModal() {
       this.$emit("close");
     },
+
     handleKeydown(event) {
       if (event.key === "Escape") {
         this.closeModal();
+      }
+
+      if (event.key === "Tab") {
+        const focusableElements = this.$refs.modalBox.querySelectorAll(
+          'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])',
+        );
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        if (!event.shiftKey && document.activeElement === lastElement) {
+          event.preventDefault();
+          firstElement.focus();
+        }
+
+        if (event.shiftKey && document.activeElement === firstElement) {
+          event.preventDefault();
+          lastElement.focus();
+        }
       }
     },
   },

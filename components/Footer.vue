@@ -2,12 +2,17 @@
   <footer class="app-footer">
     <div class="footer-content">
       <div class="footer-main">
-        <i class="fa-solid fa-anchor footer-icon" aria-hidden="true"></i>
+        <Icon name="fa6-solid:anchor" class="footer-icon" aria-hidden="true" />
         <span class="footer-text">
           {{ getFooterText(language) }}
           <span class="footer-inline-meta">
             • {{ year }}
-            <img src="/cim.png" alt="CIM" class="footer-badge" />
+            <img
+              src="/cim.webp"
+              alt=""
+              class="footer-badge"
+              aria-hidden="true"
+            />
           </span>
         </span>
       </div>

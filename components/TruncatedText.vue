@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="content-list">
+    <p :id="contentId" class="content-list">
       {{ previewText() }}
     </p>
     <button
@@ -8,6 +8,8 @@
       class="btn-see-more"
       type="button"
       @click="$emit('open')"
+      :aria-expanded="false"
+      :aria-controls="contentId"
     >
       {{ t("seeMore") }}
     </button>
@@ -32,6 +34,7 @@ export default {
   data() {
     return {
       limit: 210,
+      contentId: `truncated-text-${Math.random().toString(36).slice(2, 9)}`,
       translations: {
         pt: {
           seeMore: "Ver mais",
@@ -90,5 +93,9 @@ export default {
   word-break: break-word;
   overflow-wrap: break-word;
   white-space: normal;
+
+  max-height: 210px;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
 }
 </style>

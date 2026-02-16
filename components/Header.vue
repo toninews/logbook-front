@@ -2,8 +2,12 @@
   <header class="app-header">
     <div class="header-content">
       <div class="header-left">
-        <i class="fa-solid fa-anchor header-icon anchor" aria-hidden="true"></i>
-        <span class="header-title">{{ getTitle(language) }}</span>
+        <Icon
+          name="fa6-solid:anchor"
+          class="header-icon anchor"
+          aria-hidden="true"
+        />
+        <h1 class="header-title">{{ getTitle(language) }}</h1>
       </div>
 
       <div class="header-right">
@@ -18,31 +22,51 @@
           aria-controls="header-menu-dropdown"
           @click="toggleMenu"
         >
-          <i v-if="!menuOpen" class="fa-solid fa-bars" aria-hidden="true"></i>
-          <i v-else class="fa-solid fa-xmark" aria-hidden="true"></i>
+          <Icon
+            v-if="!menuOpen"
+            name="fa6-solid:bars"
+            aria-hidden="true"
+            class="menu-btn-icon"
+          />
+          <Icon
+            v-else
+            name="fa6-solid:xmark"
+            aria-hidden="true"
+            class="menu-btn-icon"
+          />
         </button>
         <transition name="dropdown">
-          <div v-if="menuOpen" id="header-menu-dropdown" class="menu-dropdown">
+          <div
+            v-if="menuOpen"
+            id="header-menu-dropdown"
+            class="menu-dropdown"
+            role="menu"
+          >
             <button
               class="theme-toggle"
               :title="getThemeText(isDark, language)"
               type="button"
               @click="toggleDark"
             >
-              <i
-                class="fa-solid"
-                :class="isDark ? 'fa-sun' : 'fa-moon'"
+              <Icon
+                :name="isDark ? 'fa6-solid:sun' : 'fa6-solid:moon'"
+                class="theme-icon"
                 aria-hidden="true"
-              ></i>
+              />
+
               <span>{{ getThemeText(isDark, language) }}</span>
             </button>
 
             <button
               class="menu-item language-item"
+              role="menuitem"
               type="button"
               @click="toggleLanguage"
             >
-              <i class="fa-solid fa-globe" aria-hidden="true"></i>
+              <span class="flag">
+                {{ language === "pt" ? "🇧🇷" : "🇺🇸" }}
+              </span>
+
               <span class="menu-text">{{ getLanguageLabel(language) }}</span>
             </button>
 
@@ -182,11 +206,17 @@ export default {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 5px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .header-left {
-  display: inline-block;
-  text-align: left;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .header-icon {
@@ -203,8 +233,7 @@ export default {
 }
 
 .header-right {
-  float: right;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 16px;
   position: relative;
@@ -222,7 +251,12 @@ export default {
   justify-content: center;
 }
 
-.menu-btn i {
+.menu-btn:focus-visible {
+  outline: 2px solid #0284c7;
+  outline-offset: 2px;
+}
+
+.menu-btn-icon {
   font-size: 24px;
 }
 
@@ -236,6 +270,15 @@ export default {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   padding: 10px;
   z-index: 1000;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dark .menu-dropdown {
+  background: #0f172a;
+  border-color: #1e293b;
 }
 
 .menu-item:hover {
@@ -298,11 +341,6 @@ export default {
   background: #f1f5f9;
 }
 
-.dark .theme-toggle i {
-  background: #1e293b;
-  color: #facc15;
-}
-
 .dark .theme-toggle {
   color: #fff;
 }
@@ -325,12 +363,21 @@ export default {
   text-align: center;
 }
 
-.theme-toggle i {
+.theme-toggle .theme-icon {
   position: absolute;
   left: 12px;
   top: 50%;
   transform: translateY(-50%);
   color: #facc15;
+}
+
+.menu-item .menu-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
 }
 
 .menu-text {
@@ -340,15 +387,8 @@ export default {
   font-size: 16px;
 }
 
-.menu-item i {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 16px;
-}
-
 .language-dropdown {
+  border: 1px solid #e2e8f0;
   position: absolute;
   top: calc(100% + 8px);
   left: 0;
@@ -357,10 +397,14 @@ export default {
   border-radius: 10px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   padding: 10px 10px 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .dark .language-dropdown {
   background: #0f172a;
+  border-color: #1e293b;
 }
 
 .dark .language-option {
@@ -398,6 +442,30 @@ export default {
   transform: translateY(-50%);
 }
 
+.dark .menu-btn {
+  color: #64748b;
+}
+
+.dark .theme-toggle {
+  color: #facc15;
+  background: #1e293b;
+}
+
+.dark .theme-toggle:hover {
+  background: #2563eb;
+}
+
+.dark .menu-item,
+.dark .language-option {
+  color: #e5e7eb;
+  background: #1e293b;
+}
+
+.dark .menu-item:hover,
+.dark .language-option:hover {
+  background: #2563eb;
+}
+
 @media (max-width: 768px) {
   .language-dropdown {
     top: calc(100% + 8px);
@@ -405,8 +473,20 @@ export default {
   }
 
   .header-content {
-    text-align: center;
+    flex-direction: column;
+    align-items: center;
   }
+
+  .header-right {
+    width: 100%;
+    justify-content: flex-end;
+    padding: 20px 0 0 0;
+  }
+
+  .app-header {
+    padding: 20px 0 0 0;
+  }
+
   .header-title {
     font-size: 30px;
   }

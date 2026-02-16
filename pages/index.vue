@@ -36,7 +36,7 @@
 
             <div class="col-xs-12 end-xs">
               <button type="submit" class="btn">
-                {{ t("save") }} <i class="fa-solid fa-floppy-disk"></i>
+                {{ t("save") }} <Icon name="fa6-solid:floppy-disk" />
               </button>
             </div>
           </div>
@@ -46,7 +46,7 @@
 
     <div class="row center-xs">
       <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6 search-box">
-        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <Icon name="fa6-solid:magnifying-glass" class="search-icon" />
 
         <label for="searchInput" class="sr-only">
           {{ t("search") }}
@@ -71,11 +71,13 @@
     <div class="row center-xs">
       <div class="col-xs-11 col-sm-10 col-md-8 col-lg-6 my-title-main">
         <h1 class="title-list">
-          <i class="fa-solid fa-book-open"></i>{{ t("myLogs") }}
+          <Icon name="fa6-solid:book-open" class="title-list-icon" />{{
+            t("myLogs")
+          }}
         </h1>
 
         <div v-if="loading" class="loading-text">
-          <i class="fa-solid fa-spinner fa-spin"></i> {{ t("loading") }}
+          <Icon name="fa6-solid:spinner" /> {{ t("loading") }}
         </div>
 
         <div v-else-if="registros.length === 0" class="no-records">
@@ -90,7 +92,7 @@
           <div class="registro-header">
             <h3 class="my-title">{{ registro.title }}</h3>
             <span class="registro-time"
-              ><i class="fa-regular fa-clock"></i>
+              ><Icon name="fa6-regular:clock" />
               {{ elapsedTime(registro.createdAt) }}
             </span>
           </div>
@@ -458,7 +460,7 @@ export default {
   margin-bottom: 16px;
 }
 
-.title-list i {
+.title-list-icon {
   margin-right: 8px;
 }
 
@@ -663,6 +665,10 @@ export default {
   border-color: #334155;
 }
 
+.dark .no-records {
+  color: #cbd5e1;
+}
+
 .dark input::placeholder {
   color: #94a3b8;
 }
@@ -683,7 +689,7 @@ export default {
 }
 
 .dark .btn-search {
-  background: #2563eb;
+  background: #1e40af;
 }
 
 .dark .btn-search:hover {
@@ -707,8 +713,8 @@ export default {
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #0284c7;
-  background: #ffffff;
-  color: #0284c7;
+  background: #e2e8f0;
+  color: #1e293b;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -737,7 +743,7 @@ export default {
 .no-records {
   text-align: center;
   font-size: 18px;
-  color: #777;
+  color: #475569;
   margin: 20px 0;
 }
 
