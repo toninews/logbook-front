@@ -230,7 +230,7 @@
   -ms-flex-order: 1;
   order: 1;
 }
-@media (max-width: 768px) {
+@media only screen and (min-width: 48em) {
   .container {
     /* width: 49rem; */
     width: 100%;

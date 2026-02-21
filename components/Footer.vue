@@ -88,7 +88,7 @@ export default {
 
 .footer-text {
   color: #e2e8f0;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   vertical-align: middle;
 }
@@ -107,9 +107,9 @@ export default {
   object-fit: contain;
 }
 
-@media (max-width: 400px) {
+@media (min-width: 401px) {
   .footer-text {
-    font-size: 12px;
+    font-size: 14px;
   }
 }
 </style>

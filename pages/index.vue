@@ -455,9 +455,10 @@ export default {
 
 .title-list {
   color: #334155;
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 600;
   margin-bottom: 16px;
+  text-align: center;
 }
 
 .title-list-icon {
@@ -554,9 +555,10 @@ export default {
 .search-box {
   position: relative;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   gap: 5px;
-  padding: 20px 5px 20px 5px;
+  padding: 20px 12px;
 }
 
 .search-box input {
@@ -565,6 +567,7 @@ export default {
   border-radius: 8px;
   border: 1px solid #cbd5e1;
   font-size: 14px;
+  margin-bottom: 0.5rem;
 }
 
 .sr-only {
@@ -582,6 +585,7 @@ export default {
 .search-icon {
   position: absolute;
   left: 12px;
+  top: 33px;
   color: #64748b;
   font-size: 14px;
 }
@@ -592,7 +596,7 @@ export default {
   border: none;
   background: #0284c7;
   color: #fff;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   cursor: pointer;
   transition: background 0.2s ease;
@@ -734,6 +738,18 @@ export default {
   transform: translateY(1px);
 }
 
+.search-box .btn-search {
+  width: 100%;
+  margin-bottom: 0.5rem;
+  justify-content: center;
+}
+
+.search-box .btn-clear {
+  width: 100%;
+  margin-bottom: 0;
+  justify-content: center;
+}
+
 .loading-text {
   text-align: center;
   font-size: 18px;
@@ -747,43 +763,34 @@ export default {
   margin: 20px 0;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 769px) {
   .search-box {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
+    flex-direction: row;
+    align-items: center;
   }
 
   .search-box input {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
   }
 
   .search-box .btn-search,
   .search-box .btn-clear {
-    width: 100%;
-    margin-bottom: 0.5rem;
-  }
-
-  .search-box .btn-clear {
+    width: auto;
     margin-bottom: 0;
   }
 
   .search-icon {
-    top: 33px;
+    top: 50%;
+    transform: translateY(-50%);
   }
 
   .title-list {
-    font-size: 26px;
-    text-align: center;
+    font-size: 24px;
+    text-align: left;
   }
 
   .btn-search {
-    font-size: 16px;
-  }
-
-  .search-box .btn-search,
-  .search-box .btn-clear {
-    justify-content: center;
+    font-size: 14px;
   }
 }
 </style>

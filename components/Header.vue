@@ -199,7 +199,7 @@ export default {
   width: 100%;
   background: linear-gradient(135deg, #e0f2fe, #bae6fd);
   border-bottom: 1px solid #cbd5e1;
-  padding: 36px 0;
+  padding: 20px 0 0 0;
 }
 
 .header-content {
@@ -211,6 +211,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+  flex-direction: column;
 }
 
 .header-left {
@@ -226,7 +227,7 @@ export default {
 }
 
 .header-title {
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 700;
   letter-spacing: -0.5px;
   color: #0f172a;
@@ -237,6 +238,9 @@ export default {
   align-items: center;
   gap: 16px;
   position: relative;
+  width: 100%;
+  justify-content: flex-end;
+  padding: 20px 0 0 0;
 }
 
 .menu-btn {
@@ -466,29 +470,22 @@ export default {
   background: #2563eb;
 }
 
-@media (max-width: 768px) {
-  .language-dropdown {
-    top: calc(100% + 8px);
-    left: 0;
-  }
-
+@media (min-width: 769px) {
   .header-content {
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
   }
 
   .header-right {
-    width: 100%;
-    justify-content: flex-end;
-    padding: 20px 0 0 0;
+    width: auto;
+    padding: 0;
   }
 
   .app-header {
-    padding: 20px 0 0 0;
+    padding: 36px 0;
   }
 
   .header-title {
-    font-size: 30px;
+    font-size: 28px;
   }
 }
 </style>

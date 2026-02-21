@@ -100,6 +100,7 @@ export default {
   inset: 0;
   background: rgba(0, 0, 0, 0.6);
   z-index: 9999;
+  padding: 15px;
 
   display: flex;
   align-items: center;
@@ -108,13 +109,14 @@ export default {
 
 .modal-box {
   background: #fff;
-  max-width: 800px;
-  width: 90%;
+  max-width: 100%;
+  width: 100%;
   max-height: 80vh;
   border-radius: 12px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  margin: 0;
 }
 
 .modal-header {
@@ -164,15 +166,14 @@ export default {
   background: rgba(0, 0, 0, 0.8);
 }
 
-@media (max-width: 600px) {
+@media (min-width: 601px) {
   .modal-overlay {
-    padding: 15px;
+    padding: 0;
   }
 
   .modal-box {
-    width: 100%;
-    max-width: 100%;
-    margin: 0;
+    width: 90%;
+    max-width: 800px;
   }
 }
 </style>
