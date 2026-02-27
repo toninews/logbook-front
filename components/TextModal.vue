@@ -42,7 +42,7 @@ export default {
   emits: ["close"],
   data() {
     return {
-      titleId: `text-modal-title-${Math.random().toString(36).slice(2, 11)}`,
+      titleId: "text-modal-title",
       previousFocusedElement: null,
     };
   },

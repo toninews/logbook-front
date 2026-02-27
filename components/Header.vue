@@ -12,7 +12,7 @@
 
       <div class="header-right">
         <span class="header-date">
-          {{ getToday(language) }}
+          {{ todayLabel }}
         </span>
         <button
           class="menu-btn"
@@ -115,6 +115,8 @@ export default {
     return {
       menuOpen: false,
       languageOpen: false,
+      todayLabel: "",
+      dateTimerId: null,
       translations: {
         pt: {
           title: "Diário de Bordo",
@@ -132,6 +134,26 @@ export default {
         },
       },
     };
+  },
+
+  mounted() {
+    this.updateToday();
+    this.dateTimerId = setInterval(() => {
+      this.updateToday();
+    }, 60000);
+  },
+
+  beforeUnmount() {
+    if (this.dateTimerId) {
+      clearInterval(this.dateTimerId);
+      this.dateTimerId = null;
+    }
+  },
+
+  watch: {
+    language() {
+      this.updateToday();
+    },
   },
 
   methods: {
@@ -173,6 +195,10 @@ export default {
       }
 
       return dateStr;
+    },
+
+    updateToday() {
+      this.todayLabel = this.getToday(this.language);
     },
 
     getLanguageLabel(lang) {

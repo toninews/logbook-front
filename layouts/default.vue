@@ -24,15 +24,18 @@ useHead({
 
 const allowedLanguages = ["pt", "en"];
 
-const darkCookie = useCookie("darkMode", { default: () => "false" });
-const languageCookie = useCookie("language", { default: () => "pt" });
+const darkCookie = useCookie("darkMode");
+const languageCookie = useCookie("language");
 
-const isDark = ref(darkCookie.value === "true");
-const language = ref(
-  allowedLanguages.includes(languageCookie.value) ? languageCookie.value : "pt",
-);
+const isDark = ref(false);
+const language = ref("pt");
+const hasHydrated = ref(false);
 
 watch(isDark, (value) => {
+  if (!hasHydrated.value) {
+    return;
+  }
+
   const serialized = value ? "true" : "false";
   darkCookie.value = serialized;
 
@@ -46,6 +49,10 @@ watch(isDark, (value) => {
 });
 
 watch(language, (value) => {
+  if (!hasHydrated.value) {
+    return;
+  }
+
   languageCookie.value = value;
 
   if (import.meta.client) {
@@ -67,11 +74,26 @@ onMounted(() => {
     const savedLang = localStorage.getItem("language");
     if (savedLang && allowedLanguages.includes(savedLang)) {
       language.value = savedLang;
+    } else if (
+      typeof languageCookie.value === "string" &&
+      allowedLanguages.includes(languageCookie.value)
+    ) {
+      language.value = languageCookie.value;
+    }
+
+    if (
+      savedDark !== "true" &&
+      savedDark !== "false" &&
+      (darkCookie.value === "true" || darkCookie.value === "false")
+    ) {
+      isDark.value = darkCookie.value === "true";
     }
   } catch (error) {
     // Keep cookie/default values when storage is unavailable.
     console.error("failed to read user preferences:", error);
   }
+
+  hasHydrated.value = true;
 });
 
 function toggleDark() {

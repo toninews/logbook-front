@@ -13,7 +13,7 @@ export default defineNuxtConfig({
       Roboto: [400, 600],
     },
     display: "swap",
-    preload: true,
+    preload: false,
     download: false,
   },
   devtools: { enabled: true },

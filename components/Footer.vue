@@ -31,7 +31,7 @@ export default {
   },
   data() {
     return {
-      year: new Date().getFullYear(),
+      year: "",
       clockTimerId: null,
       translations: {
         pt: "Diário de Bordo • Desenvolvido por toninews",
@@ -41,8 +41,9 @@ export default {
   },
 
   mounted() {
+    this.updateYear();
     this.clockTimerId = setInterval(() => {
-      this.year = new Date().getFullYear();
+      this.updateYear();
     }, 60000);
   },
 
@@ -54,6 +55,10 @@ export default {
   },
 
   methods: {
+    updateYear() {
+      this.year = String(new Date().getFullYear());
+    },
+
     getFooterText(lang) {
       return this.translations[lang] || this.translations.pt;
     },

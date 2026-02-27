@@ -100,6 +100,7 @@
           <TruncatedText
             :text="registro.content"
             :language="language"
+            :content-id="`truncated-text-${registro._id}`"
             @open="openRegistro(registro)"
           />
 
@@ -144,9 +145,15 @@
 <script>
 import Swal from "sweetalert2";
 import { translations } from "~/utils/translations";
-import { API_ROUTES } from "~/utils/apiRoutes";
 import { alertError, alertWarning, alertSuccess } from "~/utils/alerts";
 import { elapsedTime } from "~/utils/elapsedTime";
+import { parseTags } from "~/utils/tags";
+import {
+  ApiError,
+  createLog,
+  deleteLog,
+  fetchLogs,
+} from "~/services/logsApi";
 
 export default {
   props: ["language"],
@@ -197,31 +204,20 @@ export default {
       this.selectedRegistro = null;
     },
 
-    getWriteTokenHeader() {
-      if (!this.writeToken) {
-        return {};
-      }
-
-      return {
-        "x-write-token": this.writeToken,
-      };
-    },
-
     async loadLogs(page = 1) {
       try {
         this.loading = true;
-        const queryParams = new URLSearchParams({
-          page: String(page),
+        const data = await fetchLogs({
+          apiBase: this.apiBase,
+          page,
           search: this.search,
         });
-        const response = await fetch(
-          `${this.apiBase}${API_ROUTES.GET_LIST}?${queryParams.toString()}`,
-        );
 
-        this.debugLog("response.ok:", response.ok);
-        this.debugLog("status:", response.status);
-
-        if (response.status === 429) {
+        this.registros = data.data;
+        this.totalPages = data.totalPages;
+        this.currentPage = data.currentPage;
+      } catch (err) {
+        if (err instanceof ApiError && err.status === 429) {
           alertWarning(
             this.t("swalRateLimitTitle"),
             this.t("swalRateLimitText"),
@@ -229,18 +225,6 @@ export default {
           return;
         }
 
-        if (!response.ok) {
-          const text = await response.text();
-          alertError(this.t("swalErrorTitle"), this.t("swalErrorText"));
-          throw new Error(text);
-        }
-
-        const data = await response.json();
-
-        this.registros = data.data;
-        this.totalPages = data.totalPages;
-        this.currentPage = data.currentPage;
-      } catch (err) {
         console.error("error loading logs:", err);
         alertError(this.t("swalErrorTitle"), this.t("swalErrorText"));
       } finally {
@@ -254,15 +238,7 @@ export default {
         return;
       }
 
-      const rawTags = this.tagsInput.split(",");
-      const tags = [];
-
-      for (let i = 0; i < rawTags.length; i++) {
-        const tag = rawTags[i].trim();
-        if (tag) {
-          tags.push(tag);
-        }
-      }
+      const tags = parseTags(this.tagsInput);
 
       const registrationData = {
         title: this.titulo,
@@ -270,38 +246,14 @@ export default {
         tags,
       };
 
-      const config = {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-          ...this.getWriteTokenHeader(),
-        },
-        body: JSON.stringify(registrationData),
-      };
-      this.debugLog("config", config);
+      this.debugLog("registrationData", registrationData);
 
       try {
-        const response = await fetch(
-          `${this.apiBase}${API_ROUTES.INSERT_TASK}`,
-          config,
-        );
-        this.debugLog("http status:", response.status);
-
-        if (response.status === 429) {
-          alertWarning(
-            this.t("swalRateLimitTitle"),
-            this.t("swalRateLimitText"),
-          );
-          return;
-        }
-
-        if (!response.ok) {
-          const text = await response.text();
-          alertError(this.t("swalErrorTitle"), this.t("swalErrorText"));
-          throw new Error(text);
-        }
-
-        const data = await response.json();
+        const data = await createLog({
+          apiBase: this.apiBase,
+          writeToken: this.writeToken,
+          registrationData,
+        });
         this.debugLog("response from backend", data);
 
         this.titulo = "";
@@ -314,6 +266,23 @@ export default {
 
         this.debugLog("success!");
       } catch (error) {
+        if (error instanceof ApiError && error.status === 401) {
+          console.error("write token rejected on create:", error.details);
+          alertError(
+            this.t("swalErrorTitle"),
+            "Token de escrita inválido/ausente (401). Verifique NUXT_PUBLIC_WRITE_TOKEN e reinicie o frontend.",
+          );
+          return;
+        }
+
+        if (error instanceof ApiError && error.status === 429) {
+          alertWarning(
+            this.t("swalRateLimitTitle"),
+            this.t("swalRateLimitText"),
+          );
+          return;
+        }
+
         console.error("unexpected error:", error);
         alertError(this.t("swalErrorTitle"), this.t("swalErrorText"));
       }
@@ -338,31 +307,36 @@ export default {
         return;
       }
 
-      const config = {
-        method: "DELETE",
-        headers: {
-          ...this.getWriteTokenHeader(),
-        },
-      };
-
       try {
-        const response = await fetch(
-          `${this.apiBase}${API_ROUTES.DELETE_TASK(id)}`,
-          config,
-        );
-        this.debugLog("status delete:", response.status);
-        this.debugLog("response ok?", response.ok);
+        await deleteLog({
+          apiBase: this.apiBase,
+          writeToken: this.writeToken,
+          id,
+        });
 
-        if (response.ok) {
-          alertSuccess(
-            this.t("swalSuccessTitle"),
-            this.t("swalDeleteSuccessText"),
-          );
-          this.loadLogs();
-        } else {
-          alertError(this.t("swalErrorTitle"), this.t("swalErrorText"));
-        }
+        alertSuccess(
+          this.t("swalSuccessTitle"),
+          this.t("swalDeleteSuccessText"),
+        );
+        this.loadLogs();
       } catch (error) {
+        if (error instanceof ApiError && error.status === 401) {
+          console.error("write token rejected on delete:", error.details);
+          alertError(
+            this.t("swalErrorTitle"),
+            "Token de escrita inválido/ausente (401). Verifique NUXT_PUBLIC_WRITE_TOKEN e reinicie o frontend.",
+          );
+          return;
+        }
+
+        if (error instanceof ApiError && error.status === 429) {
+          alertWarning(
+            this.t("swalRateLimitTitle"),
+            this.t("swalRateLimitText"),
+          );
+          return;
+        }
+
         console.error("unexpected error:", error);
         alertError(this.t("swalErrorTitle"), this.t("swalErrorText"));
       }

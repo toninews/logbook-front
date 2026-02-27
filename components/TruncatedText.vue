@@ -28,13 +28,16 @@ export default {
       default: "pt",
       validator: (value) => ["pt", "en"].includes(value),
     },
+    contentId: {
+      type: String,
+      default: "truncated-text-content",
+    },
   },
   emits: ["open"],
 
   data() {
     return {
       limit: 210,
-      contentId: `truncated-text-${Math.random().toString(36).slice(2, 9)}`,
       translations: {
         pt: {
           seeMore: "Ver mais",
