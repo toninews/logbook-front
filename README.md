@@ -1,166 +1,233 @@
-# 📘 Logbook Frontend (Nuxt)
+# Logbook Frontend
 
-## 🎯 Project Purpose
+Frontend do sistema Logbook, desenvolvido com Nuxt 4 para consumir uma API REST de registros.
 
-This project is the frontend application for the Logbook system, built to consume a real-world REST API and simulate a production-ready frontend environment.
+Nuxt 4 frontend for the Logbook system, built to consume a REST API for log entries.
 
-The main goal was to design a clean, scalable, and maintainable user interface that interacts with a backend API deployed on a real VPS.
+## Portuguese
 
-This frontend focuses on:
+### Sobre
 
-- Real API consumption
-- Clean UI/UX architecture
-- Separation of concerns
-- Production-aware configuration
-- Deployment and real-world access
+Este projeto foi construído para servir como a interface do Logbook, permitindo criar, listar, buscar e excluir registros.
 
----
+A aplicação roda hoje como frontend estático/client-side:
 
-## 🌐 Live Demo
+- Nuxt 4
+- Vue 3
+- `nitro.preset = "static"`
+- integração com API via `fetch`
+- configuração pública com `runtimeConfig.public`
 
-- Live Application:  
-  http://163.176.158.136:3000/
+### Funcionalidades
 
-This live demo is connected to the production backend API, running on a Linux VPS.
+- criação de registros com título, conteúdo e tags
+- listagem paginada
+- busca por título, conteúdo ou tags
+- exclusão com confirmação
+- feedback visual para sucesso, erro e rate limit
+- suporte a português e inglês
 
----
+### Arquitetura
 
-## 🖥️ About the Application
+Estrutura principal:
 
-The Logbook frontend allows users to manage daily log entries in a simple and intuitive way.
+- `pages/index.vue`: tela principal e fluxo da interface
+- `services/logsApi.js`: camada de acesso à API
+- `utils/apiRoutes.js`: centralização das rotas
+- `utils/tags.js`: parse de tags
+- `utils/alerts.js`: alerts com SweetAlert2
+- `utils/elapsedTime.js`: tempo relativo
+- `utils/translations.js`: textos PT/EN
 
-Users can:
+Práticas aplicadas:
 
-- Create new log entries
-- View logs with pagination
-- Search logs by title, content, or tags
-- Soft-delete logs
-- Interact with a real backend API in real time
+- separação entre UI e integração HTTP
+- rotas centralizadas
+- utilitários reutilizáveis
+- tratamento de erro com `ApiError`
+- regras simples extraídas da view para facilitar manutenção e teste
 
-This project was built with Nuxt to leverage:
+### Ambiente
 
-- Component-based architecture
-- Client-side and server-side rendering
-- Clean routing system
-- Optimized production builds
+Crie um arquivo `.env` com:
 
----
-
-## 🛠️ Code Quality & Practices
-
-- Centralized API routes (`utils/apiRoutes.js`) to avoid duplication and typos
-- Internationalization support with `utils/translations.js`
-- Utility functions for alerts (`utils/alerts.js`) to reduce repetition
-- Extracted `elapsedTime` logic into `utils/elapsedTime.js` for reusability and testability
-- Basic unit tests with Node.js to validate core logic without external libraries
-
----
-
-## ✨ Features
-
-### 🧩 Core Features
-
-- Log Creation  
-  Create daily log entries with title, content, and tags
-
-- Log Listing  
-  Paginated list of logs fetched from the backend API
-
-- Search & Filtering  
-  Search logs by title, content, or tags
-
-- Soft Delete Handling  
-  Deleted logs are handled logically, preserving data integrity
-
----
-
-### 🎨 UI & UX
-
-- Clean and minimal interface
-- Focused on readability and usability
-- Responsive layout
-- Clear feedback for loading, success, and error states
-- User-friendly alerts and confirmations using SweetAlert2 (Swal)
-
----
-
-### 🔌 API Integration
-
-- Fully integrated with the Logbook REST API
-- Centralized API configuration
-- Error handling aligned with backend responses
-
----
-
-## ⚙️ Tech Stack
-
-- Nuxt.js
-- Vue.js
-- SweetAlert2 (Swal) for alerts and confirmations
-- REST API integration
-- Docker-ready configuration
-- Deployed on an Ubuntu VPS hosted on Oracle Cloud Infrastructure (OCI)
-
----
-
-## 🔐 Environment Variables
-
-This project uses environment variables to configure the API connection.
-
-Environment Variables
-Variable Description Example
-API_BASE_URL Backend API base URL http://163.176.158.136:4010
-
-⚠️ Note:
-In production, this value should match the backend API address, Docker network, or reverse proxy configuration.
-
-🚀 Running the Project Locally
-Install dependencies
-
+```env
+NUXT_PUBLIC_API_BASE=http://localhost:4010
+NUXT_PUBLIC_WRITE_TOKEN=seu_token_de_escrita
 ```
+
+Mapeamento:
+
+- `NUXT_PUBLIC_API_BASE` -> `runtimeConfig.public.apiBase`
+- `NUXT_PUBLIC_WRITE_TOKEN` -> `runtimeConfig.public.writeToken`
+
+Observações:
+
+- `GET /logs/getList` não precisa token
+- `POST` e `DELETE` exigem o header `x-write-token`
+- como o token está em `public`, ele fica exposto no navegador; isso funciona para este projeto, mas não é o modelo ideal para cenários sensíveis de produção
+
+### Execução Local
+
+Instalar dependências:
+
+```bash
 npm install
 ```
 
-Start development server
+Rodar em desenvolvimento:
 
-```
+```bash
 npm run dev
 ```
 
-The application will be available at:
+Gerar build estático:
 
-```
-http://localhost:3000
-```
-
-🧪 Production Build
-
-```
-npm run build
-npm run start
+```bash
+npm run generate
 ```
 
-Or via Docker (recommended for production environments).
+Visualizar build localmente:
 
-## 🧠 Architectural Notes
+```bash
+npm run preview
+```
 
-- This frontend was designed with production awareness in mind:
-- Clear separation between UI and API layers
-- Centralized configuration for API endpoints
-- No hardcoded environment-specific values
-- Ready for containerized deployment
-- Easily extendable for authentication, roles, or dashboards
+### Deploy
 
-## 🚀 Conclusion
+Como o projeto é estático, mudanças em variáveis públicas exigem novo build.
 
-This frontend completes the Logbook system by providing a clean and functional interface on top of a real production backend.
+Fluxo recomendado:
 
-Together with the backend API, this project demonstrates:
+1. atualizar `.env`
+2. rodar `npm run generate`
+3. publicar os arquivos gerados
+4. fazer refresh completo no navegador
 
-- Full-stack development skills
-- Real-world API consumption
-- Production-aware configuration
-- Deployment and maintenance on a real VPS
-- Clean architecture and maintainable codebase
+### Testes
 
-This project was built as a portfolio piece, aiming to reflect how modern frontend applications are structured, deployed, and maintained in real production environments.
+O projeto possui teste básico para regra isolada em:
+
+- `test/elapsedTime.test.js`
+
+### Stack
+
+- Nuxt 4
+- Vue 3
+- SweetAlert2
+- `@nuxt/icon`
+- `@nuxtjs/google-fonts`
+
+## English
+
+### About
+
+This project is the frontend for the Logbook system, built to create, list, search, and delete log entries through a REST API.
+
+The app currently runs as a static/client-side frontend:
+
+- Nuxt 4
+- Vue 3
+- `nitro.preset = "static"`
+- API integration through `fetch`
+- public configuration via `runtimeConfig.public`
+
+### Features
+
+- create entries with title, content, and tags
+- paginated listing
+- search by title, content, or tags
+- delete with confirmation
+- visual feedback for success, error, and rate limiting
+- Portuguese and English UI support
+
+### Architecture
+
+Main structure:
+
+- `pages/index.vue`: main screen and UI flow
+- `services/logsApi.js`: API access layer
+- `utils/apiRoutes.js`: centralized routes
+- `utils/tags.js`: tag parsing
+- `utils/alerts.js`: SweetAlert2 helpers
+- `utils/elapsedTime.js`: relative time formatting
+- `utils/translations.js`: PT/EN texts
+
+Practices applied:
+
+- separation between UI and HTTP integration
+- centralized routes
+- reusable utilities
+- error handling with `ApiError`
+- simple rules extracted from the view layer for easier maintenance and testing
+
+### Environment
+
+Create a `.env` file with:
+
+```env
+NUXT_PUBLIC_API_BASE=http://localhost:4010
+NUXT_PUBLIC_WRITE_TOKEN=your_write_token
+```
+
+Mapping:
+
+- `NUXT_PUBLIC_API_BASE` -> `runtimeConfig.public.apiBase`
+- `NUXT_PUBLIC_WRITE_TOKEN` -> `runtimeConfig.public.writeToken`
+
+Notes:
+
+- `GET /logs/getList` does not require a token
+- `POST` and `DELETE` require the `x-write-token` header
+- since the token lives in `public`, it is exposed to the browser; acceptable for this project, but not ideal for sensitive production scenarios
+
+### Local Run
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run in development:
+
+```bash
+npm run dev
+```
+
+Generate the static build:
+
+```bash
+npm run generate
+```
+
+Preview the generated build locally:
+
+```bash
+npm run preview
+```
+
+### Deployment
+
+Because the project is static, changes to public environment variables require a new build.
+
+Recommended flow:
+
+1. update `.env`
+2. run `npm run generate`
+3. publish the generated files
+4. hard refresh the browser
+
+### Tests
+
+The project includes a basic isolated-rule test in:
+
+- `test/elapsedTime.test.js`
+
+### Stack
+
+- Nuxt 4
+- Vue 3
+- SweetAlert2
+- `@nuxt/icon`
+- `@nuxtjs/google-fonts`
