@@ -10,6 +10,10 @@ Nuxt 4 frontend for the Logbook system, built to consume a REST API for log entr
 
 Este projeto foi construído para servir como a interface do Logbook, permitindo criar, listar, buscar e excluir registros.
 
+### Live Demo
+
+[Acessar aplicação](http://163.176.158.136:3000/)
+
 A aplicação roda hoje como frontend estático/client-side:
 
 - Nuxt 4
@@ -123,6 +127,10 @@ O projeto possui teste básico para regra isolada em:
 ### About
 
 This project is the frontend for the Logbook system, built to create, list, search, and delete log entries through a REST API.
+
+### Live Demo
+
+[Access the app](https://YOUR-DEPLOY-LINK-HERE)
 
 The app currently runs as a static/client-side frontend:
 
